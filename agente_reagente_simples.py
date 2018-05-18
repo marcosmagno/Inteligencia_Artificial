@@ -3,6 +3,8 @@
 import random
 import time
 
+__author__ = "Marcos Magno de Carvalho"
+
 
 class Agente(object):
     """docstring for Agente"""
@@ -44,22 +46,27 @@ class Agente(object):
 
     def percepcao(self, posicao_livre):
         """
-            Sequência de percepções: história completa de tudo
-            que o agente percebeu.
+            Sequência de percepções: 
+            história completa de tudo que o agente percebeu.
+
+            Interpretar Entrada baseado em:
+                posicao_livre : posicoes livres no tabuleiro
+                jogada_humano : jogadas do ser Humano
 
         """
-
 
         for i in range(0, 8):
             jog = [x for x in self.ganho[i] if x in self.jogada_humano]
             if len(jog) > 1:
-                jog_acao = [y for y in self.ganho[i] if y not in self.jogada_humano]
+                jog_acao = [y for y in self.ganho[i]
+                            if y not in self.jogada_humano]
                 self.jogada_humano.pop(1)
                 return jog_acao[0]
 
         posicao_livre = posicao_livre
         tamanho = len(posicao_livre)
-        # escolhe aleatoriamente uma das posicoes livre
+        
+        # Escolhe aleatoriamente uma das posicoes livre na primeira jogada
         vertical_jogo = random.choice(posicao_livre)
         return vertical_jogo
 
@@ -80,7 +87,7 @@ class JogoVelha(object):
             [9, 6, 3],
             [7, 5, 3],  # Diagonais
             [1, 5, 9]
-        ]        
+        ]
 
     def set_posicao_livre(self, lista):
         self.lista_posicao_livre = lista
@@ -90,6 +97,7 @@ class JogoVelha(object):
 
     def get_formacao(self):
         return self.ganho
+
 
 class Humano(object):
     """docstring for Jogado"""
@@ -123,17 +131,16 @@ def main():
 
     posicao = [
         None,
-        (5, 1),  # 1
-        (5, 5),  # 2
-        (5, 9),  # 3
-        (3, 1),  # 4
-        (3, 5),  # 5
-        (3, 9),  # 6
-        (1, 1),  # 7
-        (1, 5),  # 8
-        (1, 9),  # 9
+        (5, 1),
+        (5, 5),
+        (5, 9),
+        (3, 1),
+        (3, 5),
+        (3, 9),
+        (1, 1),
+        (1, 5),
+        (1, 9),
     ]
-
 
     tabuleiro = []
     for linha in velha.splitlines():
@@ -144,7 +151,6 @@ def main():
     posicao_livre = []
 
     while True:
-
         for t in tabuleiro:
             print("".join(t))
         if not jogando:
@@ -157,8 +163,6 @@ def main():
             if tabuleiro[posicao[i][0]][posicao[i][1]] == " ":
                 posicao_livre.append(i)
                 obj_JogoVelha.set_posicao_livre(posicao_livre)
-
-        posicao_livre = []
 
         if jogador == "X":
             jogada = int(
@@ -175,12 +179,13 @@ def main():
                 obj_JogoVelha.get_posicao_livre(), obj_Humano.get_jogada_humano())
 
             obj_Agente.agente()  # Ativa o agente
-            jogada = obj_Agente.get_acao()  # Ativa o atuador
+            jogada = obj_Agente.get_acao()  # Atua
 
         if jogada < 1 or jogada > 9:
             print("Posicao invalida")
 
-        if tabuleiro[posicao[jogada][0]][posicao[jogada][1]] != " ": # Verifica a posicao do tabuleiro
+        # Verifica a posicao do tabuleiro
+        if tabuleiro[posicao[jogada][0]][posicao[jogada][1]] != " ":
             print("Posicao ocupada. Tente outra !")
             continue
 
