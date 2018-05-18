@@ -11,6 +11,8 @@ class Agente(object):
         self.acao = ''
         self.posicao_livre = []
         self.jogada_humano = []
+        obj_JogoVelha = JogoVelha()
+        self.ganho = obj_JogoVelha.get_formacao()
 
     def agente(self):
         """
@@ -46,21 +48,12 @@ class Agente(object):
             que o agente percebeu.
 
         """
-        print "RECV JOGADA HUMANO", self.jogada_humano
-        ganho = [
-            [1, 2, 3],  # Linhas
-            [4, 5, 6],
-            [7, 8, 9],
-            [7, 4, 1],  # Colunas
-            [8, 5, 2],
-            [9, 6, 3],
-            [7, 5, 3],  # Diagonais
-            [1, 5, 9]
-        ]
+
+
         for i in range(0, 8):
-            jog = [x for x in ganho[i] if x in self.jogada_humano]
+            jog = [x for x in self.ganho[i] if x in self.jogada_humano]
             if len(jog) > 1:
-                jog_acao = [y for y in ganho[i] if y not in self.jogada_humano]
+                jog_acao = [y for y in self.ganho[i] if y not in self.jogada_humano]
                 self.jogada_humano.pop(1)
                 return jog_acao[0]
 
@@ -78,12 +71,25 @@ class JogoVelha(object):
         self.lista_posicao_livre = []
         self.jogador = ["X", "O"]
 
+        self.ganho = [
+            [1, 2, 3],  # Linhas
+            [4, 5, 6],
+            [7, 8, 9],
+            [7, 4, 1],  # Colunas
+            [8, 5, 2],
+            [9, 6, 3],
+            [7, 5, 3],  # Diagonais
+            [1, 5, 9]
+        ]        
+
     def set_posicao_livre(self, lista):
         self.lista_posicao_livre = lista
 
     def get_posicao_livre(self):
         return self.lista_posicao_livre
 
+    def get_formacao(self):
+        return self.ganho
 
 class Humano(object):
     """docstring for Jogado"""
@@ -102,6 +108,7 @@ def main():
     obj_JogoVelha = JogoVelha()
     obj_Agente = Agente()
     obj_Humano = Humano()
+    ganho = obj_JogoVelha.get_formacao()
 
     # Inicia o primeiro jogador de forma aleatória
     jogador = obj_JogoVelha.jogador[random.randint(0, 1)]
@@ -127,16 +134,6 @@ def main():
         (1, 9),  # 9
     ]
 
-    ganho = [
-        [1, 2, 3],  # Linhas
-        [4, 5, 6],
-        [7, 8, 9],
-        [7, 4, 1],  # Colunas
-        [8, 5, 2],
-        [9, 6, 3],
-        [7, 5, 3],  # Diagonais
-        [1, 5, 9]
-    ]
 
     tabuleiro = []
     for linha in velha.splitlines():
@@ -153,7 +150,7 @@ def main():
         if not jogando:
             break
         if jogadas == 9:
-            print("Deu velha! Ninguem ganhou.")
+            print("Deu velha!")
             break
 
         for i in range(1, 10):
@@ -162,23 +159,29 @@ def main():
                 obj_JogoVelha.set_posicao_livre(posicao_livre)
 
         posicao_livre = []
+
         if jogador == "X":
             jogada = int(
-                input("Digite a posicao a jogar (1-9) "))
-            obj_Humano.set_jogada_humano(jogada)
+                input("Escolha uma posicao do Tabuleiro (1-9) "))
+
+            obj_Humano.set_jogada_humano(jogada)  # Pega a jogada do ser Humano
 
         else:
+            """
+                O sensor do agente verifica o ambiente 
+                (posicao livre e a jogada do Humano)
+            """
             obj_Agente.set_sensor(
                 obj_JogoVelha.get_posicao_livre(), obj_Humano.get_jogada_humano())
-            obj_Agente.agente()
-            jogada = obj_Agente.get_acao()
+
+            obj_Agente.agente()  # Ativa o agente
+            jogada = obj_Agente.get_acao()  # Ativa o atuador
 
         if jogada < 1 or jogada > 9:
             print("Posicao invalida")
 
-        if tabuleiro[posicao[jogada][0]][posicao[jogada][1]] != " ":
-            print("Posicao ocupada.")
-
+        if tabuleiro[posicao[jogada][0]][posicao[jogada][1]] != " ": # Verifica a posicao do tabuleiro
+            print("Posicao ocupada. Tente outra !")
             continue
 
         tabuleiro[posicao[jogada][0]][posicao[jogada][1]] = jogador
@@ -188,7 +191,7 @@ def main():
                 if tabuleiro[posicao[x][0]][posicao[x][1]] != jogador:
                     break
             else:
-                print("O jogador %s ganhou (%s): " % (jogador, p))
+                print("           O JOGADOR ( %s ) GANHOU: " % (jogador), " ")
                 jogando = False
                 break
 
