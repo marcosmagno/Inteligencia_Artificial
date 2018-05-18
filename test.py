@@ -11,18 +11,29 @@ class Agente(object):
         self.acao = ''
         self.posicao_livre = []
         self.jogada_humano = []
+        self.ganho = [
+            [1, 2, 3],  # Linhas
+            [4, 5, 6],
+            [7, 8, 9],
+            [7, 4, 1],  # Colunas
+            [8, 5, 2],
+            [9, 6, 3],
+            [7, 5, 3],  # Diagonais
+            [1, 5, 9]
+        ]
 
     def agente(self):
         """
           O comportamento do agente é dado abstratamente pela função do agente:
 
-            [f: P* -> A]
+                [f: P* -> A]
 
          onde é a P* é uma sequência de percepções e A é uma ação.
 
 
         """
-        self.atuador(self.percepcao(self.get_posicao_livre()))
+        self.atuador(self.percepcao(
+            self.get_posicao_livre(), self.get_jogada_humano()))
 
     def set_sensor(self, posicao_livre, recv_jogada_humano):
         self.posicao_livre = posicao_livre
@@ -40,35 +51,57 @@ class Agente(object):
     def get_acao(self):
         return self.acao
 
-    def percepcao(self, posicao_livre):
+    def percepcao(self, posicao_livre, jogada_humano):
         """
-            Sequência de percepções: história completa de tudo
-            que o agente percebeu.
+                Sequência de percepções: história completa de tudo
+                que o agente percebeu.
 
         """
-        print "RECV JOGADA HUMANO", self.jogada_humano
-        ganho = [
-            [1, 2, 3],  # Linhas
-            [4, 5, 6],
-            [7, 8, 9],
-            [7, 4, 1],  # Colunas
-            [8, 5, 2],
-            [9, 6, 3],
-            [7, 5, 3],  # Diagonais
-            [1, 5, 9]
-        ]
-        for i in range(0, 8):
-            jog = [x for x in ganho[i] if x in self.jogada_humano]
-            if len(jog) > 1:
-                jog_acao = [y for y in ganho[i] if y not in self.jogada_humano]
-                self.jogada_humano.pop(1)
-                return jog_acao[0]
 
-        posicao_livre = posicao_livre
-        tamanho = len(posicao_livre)
-        # escolhe aleatoriamente uma das posicoes livre
-        vertical_jogo = random.choice(posicao_livre)
-        return vertical_jogo
+
+        for i in range(0,7):
+        	print self.ganho[i]
+        	lista_final = [x for x in jogada_humano if x in self.ganho[i]]
+
+        	#lista_final = [x for x in jogada_humano if x in self.ganho[0]]
+
+        print "LISTA FINAL", lista_final
+
+        if len(jogada_humano) > 1:
+            print "marcar a proxima", self.ganho[i]
+            print "jogada humaaaaaaaaaa", jogada_humano
+            marcar = [y for y in self.ganho[i] if y not in jogada_humano]
+            print "marcaaaar essa", marcar[0]
+            return marcar[0]
+        else:
+            posicao_livre = posicao_livre
+            print "posicao livre", posicao_livre
+            print "jogada humado000000", jogada_humano
+            i = random.randrange(3, 12, 3)
+            j = random.randrange(2, 11, 3)
+            k = random.randrange(1, 10, 3)
+            l = random.randrange(7, 10, 1)
+            m = random.randrange(4, 8, 1)
+            o = random.randrange(1, 4, 1)
+            seq = [i, j, k, l, m, o]
+            tamanho = len(posicao_livre)
+            return posicao_livre[tamanho - 1]
+
+        #vertical_jogo = random.choice(seq)
+        # print vertical_jogo
+
+        # if vertical_jogo in posicao_livre:
+        #	return vertical_jogo
+        # else:
+        #	return posicao_livre[tamanho - 1]
+        #posicao_livre = percepcao
+        # print "Lista", posicao_livre
+        #i = len(posicao_livre)
+        # print "tamanho", i
+        # print "i-1", i - 1
+        # print "posicao", posicao_livre[i - 1]
+
+        # return vertical_jogo
 
 
 class JogoVelha(object):
@@ -128,14 +161,14 @@ def main():
     ]
 
     ganho = [
-        [1, 2, 3],  # Linhas
-        [4, 5, 6],
-        [7, 8, 9],
-        [7, 4, 1],  # Colunas
-        [8, 5, 2],
-        [9, 6, 3],
-        [7, 5, 3],  # Diagonais
-        [1, 5, 9]
+            [1, 2, 3],  # Linhas
+            [4, 5, 6],
+            [7, 8, 9],
+            [7, 4, 1],  # Colunas
+            [8, 5, 2],
+            [9, 6, 3],
+            [7, 5, 3],  # Diagonais
+            [1, 5, 9]
     ]
 
     tabuleiro = []
