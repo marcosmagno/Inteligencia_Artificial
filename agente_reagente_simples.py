@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import random
-import time
+
 
 __author__ = "Marcos Magno de Carvalho"
 
@@ -20,12 +20,13 @@ class Agente(object):
         """
           O comportamento do agente é dado abstratamente pela função do agente:
 
-            [f: P* -> A]
+                                        [f: P* -> A]
 
          onde é a P* é uma sequência de percepções e A é uma ação.
 
 
         """
+        print "Agente jogando ....."
         self.atuador(self.percepcao(self.get_posicao_livre()))
 
     def set_sensor(self, posicao_livre, recv_jogada_humano):
@@ -46,26 +47,31 @@ class Agente(object):
 
     def percepcao(self, posicao_livre):
         """
-            Sequência de percepções: 
-            história completa de tudo que o agente percebeu.
+                                        Sequência de percepções: 
+                                        história completa de tudo que o agente percebeu.
 
-            Interpretar Entrada baseado em:
-                posicao_livre : posicoes livres no tabuleiro
-                jogada_humano : jogadas do ser Humano
+                                        Interpretar Entrada baseado em:
+                                                                        posicao_livre : posicoes livres no tabuleiro
+                                                                        jogada_humano : jogadas do ser Humano
 
         """
-
+        ag = []
+        print "Posicoa Livre", posicao_livre
         for i in range(0, 8):
             jog = [x for x in self.ganho[i] if x in self.jogada_humano]
+
             if len(jog) > 1:
                 jog_acao = [y for y in self.ganho[i]
                             if y not in self.jogada_humano]
                 self.jogada_humano.pop(1)
                 return jog_acao[0]
 
-        posicao_livre = posicao_livre
-        tamanho = len(posicao_livre)
-        
+        ag = [h for h in posicao_livre if h in self.ganho[i]]
+        if len(ag) > 1:
+        	print "AG", ag
+        	print "AG[]", ag[0]
+        	return ag[0]
+
         # Escolhe aleatoriamente uma das posicoes livre na primeira jogada
         vertical_jogo = random.choice(posicao_livre)
         return vertical_jogo
@@ -97,6 +103,9 @@ class JogoVelha(object):
 
     def get_formacao(self):
         return self.ganho
+
+    def zera_posicao_livre(self):
+        self.lista_posicao_livre = [0]
 
 
 class Humano(object):
@@ -158,8 +167,10 @@ def main():
         if jogadas == 9:
             print("Deu velha!")
             break
+        posicao_livre = []
 
         for i in range(1, 10):
+            # Verifica todas posições livres
             if tabuleiro[posicao[i][0]][posicao[i][1]] == " ":
                 posicao_livre.append(i)
                 obj_JogoVelha.set_posicao_livre(posicao_livre)
@@ -172,8 +183,8 @@ def main():
 
         else:
             """
-                O sensor do agente verifica o ambiente 
-                (posicao livre e a jogada do Humano)
+                                            O sensor do agente verifica o ambiente 
+                                            (posicao livre e a jogada do Humano)
             """
             obj_Agente.set_sensor(
                 obj_JogoVelha.get_posicao_livre(), obj_Humano.get_jogada_humano())
