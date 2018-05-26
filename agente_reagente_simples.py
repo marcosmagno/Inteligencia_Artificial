@@ -7,9 +7,21 @@ __author__ = "Marcos Magno de Carvalho"
 
 
 class Agente(object):
-    """docstring for Agente"""
+    """
+        This class is responsible for defining the proprieties of the agente
+        Attributes:
+            acao          (int)   : A position value on the board.
+            posicao_livre (list)  : An integer list of the free position in the board.
+            jogada_humano (list)  : An list of humano moves.
+            obj_JogaVelha (object): An object of the JogoVelha
+            ganho         (list)  : A list of positions to win.
+
+    """
 
     def __init__(self):
+        """
+            This method is the Agente class constructor.
+        """
         self.acao = ''
         self.posicao_livre = []
         self.jogada_humano = []
@@ -18,69 +30,96 @@ class Agente(object):
 
     def agente(self):
         """
-          O comportamento do agente é dado abstratamente pela função do agente:
-
-                                        [f: P* -> A]
-
-         onde é a P* é uma sequência de percepções e A é uma ação.
-
-
+            The behavior of the agent is given abstractly by the function of the agent:
+                [f: P* -> A]
+            where P * is a sequence of perceptions and A is an action.
         """
-        print "Agente jogando ....."
-        self.atuador(self.percepcao(self.get_posicao_livre()))
+
+        self.atuador(self.percepcao()) # For each action, send a sequence of perceptions
 
     def set_sensor(self, posicao_livre, recv_jogada_humano):
-        self.posicao_livre = posicao_livre
-        self.jogada_humano = recv_jogada_humano
+        """
+            This method is responsible for setting each action.
+        """
+        self.posicao_livre = posicao_livre # Free position on the board
+        self.jogada_humano = recv_jogada_humano # Each move of the Humano
 
     def get_posicao_livre(self):
+        """
+            return:
+                posicao_livre (list): All free positions on the board.
+        """
         return self.posicao_livre
 
     def get_jogada_humano(self):
+        """
+            return:
+                jogada_humano (list): All moves of the Humano.
+        """
         return self.jogada_humano
 
     def atuador(self, acao):
-        self.acao = acao
+        self.acao = acao # Setting agent action.
 
     def get_acao(self):
+        """
+            return:
+                acao (int): A position value on the board.
+        """
         return self.acao
 
-    def percepcao(self, posicao_livre):
+    def percepcao(self):
         """
-                                        Sequência de percepções: 
-                                        história completa de tudo que o agente percebeu.
+            this method implements the perceptual procedures, characterized by:
+                Complete story of everything the agent perceives through the sensor.
+                Interpret input based on attributes:
 
-                                        Interpretar Entrada baseado em:
-                                                                        posicao_livre : posicoes livres no tabuleiro
-                                                                        jogada_humano : jogadas do ser Humano
-
+            Attributes:
+                posicao_livre (list): An integer list of the free position in the board.
+                jogada_humano (list): All moves of the Humano.o
+                jogAgente     (list): An integer list of agent moves
+                jogHumano     (list): An integer list of humano moves
+                jogAcao       (int) : An integer representing an humano action
+                jogoAleatorio (int) : An integer representing a random action of the agent
         """
-        ag = []
-        print "Posicoa Livre", posicao_livre
+
+        jogAgent = []
+
         for i in range(0, 8):
-            jog = [x for x in self.ganho[i] if x in self.jogada_humano]
+            jogHumano = [x for x in self.ganho[i]
+                         if x in self.jogada_humano]  # VerificaJogadaHumano
 
-            if len(jog) > 1:
-                jog_acao = [y for y in self.ganho[i]
-                            if y not in self.jogada_humano]
+            if len(jogHumano) > 1:
+                # VerificaPosicaoRestante
+                jogAcao = [y for y in self.ganho[i]
+                           if y not in self.jogada_humano]
                 self.jogada_humano.pop(1)
-                return jog_acao[0]
+                return jogAcao[0]
 
-        ag = [h for h in posicao_livre if h in self.ganho[i]]
-        if len(ag) > 1:
-        	print "AG", ag
-        	print "AG[]", ag[0]
-        	return ag[0]
+        jogAgent = [h for h in self.posicao_livre if h in self.ganho[i]]
+        if len(jogAgent) > 1:
+            return jogAgent[0]
 
-        # Escolhe aleatoriamente uma das posicoes livre na primeira jogada
-        vertical_jogo = random.choice(posicao_livre)
-        return vertical_jogo
+  
+        jogoAleatorio = random.choice(self.posicao_livre)
+        return jogoAleatorio
 
 
 class JogoVelha(object):
-    """docstring for JogoVelha"""
+    """
+        This class implements the Jogo da Velha
+            Attributes:
+                lista_posicao_livre (list) : An integer list of the free position in the board.
+                jogador:            (list) : A list of players
+                ganho               (list) : A list of gain positions
+
+
+    """
 
     def __init__(self):
+        """
+            This method is the JogoVelha class constructor.
+        """        
         self.lista_posicao_livre = []
         self.jogador = ["X", "O"]
 
@@ -104,14 +143,18 @@ class JogoVelha(object):
     def get_formacao(self):
         return self.ganho
 
-    def zera_posicao_livre(self):
-        self.lista_posicao_livre = [0]
-
 
 class Humano(object):
-    """docstring for Jogado"""
+    """
+        This class implements the properties of the humano.
+            Attributes:
+                jogada_humano (list) : An list of humano moves.
+    """
 
     def __init__(self):
+        """
+            This method is the Humano class constructor.
+        """         
         self.jogada_humano = []
 
     def set_jogada_humano(self, jogada):
@@ -122,6 +165,20 @@ class Humano(object):
 
 
 def main():
+    """
+        This methdo start the game.
+            Attributes:
+                obj_JogoVelha (object) : An object of the JogoVelha.
+                obj_Agente    (object) : An object of the Agente.
+                obj_Humano    (object) : an object of the Humano.
+                jogador       (string) : An players.
+                velha         (string) : A representation of the Jogo da Velha.
+                posicao       (list)   : An integer list of the position.
+                tabuleiro     (list)   : A representation of the board.
+                jogadas       (int)    : A integer value of the moves
+                jogando       (boolean): Status of the game.
+
+    """
     obj_JogoVelha = JogoVelha()
     obj_Agente = Agente()
     obj_Humano = Humano()
@@ -169,8 +226,9 @@ def main():
             break
         posicao_livre = []
 
+
         for i in range(1, 10):
-            # Verifica todas posições livres
+
             if tabuleiro[posicao[i][0]][posicao[i][1]] == " ":
                 posicao_livre.append(i)
                 obj_JogoVelha.set_posicao_livre(posicao_livre)
@@ -179,12 +237,17 @@ def main():
             jogada = int(
                 input("Escolha uma posicao do Tabuleiro (1-9) "))
 
-            obj_Humano.set_jogada_humano(jogada)  # Pega a jogada do ser Humano
+            if jogada < 1 or jogada > 9:
+                print("Posicao invalida")
+                return
+
+
+            obj_Humano.set_jogada_humano(jogada)  # Take the humano move.
 
         else:
             """
-                                            O sensor do agente verifica o ambiente 
-                                            (posicao livre e a jogada do Humano)
+               The agent sensor checks the environment
+                (posicao livre e a jogada do Humano)
             """
             obj_Agente.set_sensor(
                 obj_JogoVelha.get_posicao_livre(), obj_Humano.get_jogada_humano())
@@ -192,10 +255,8 @@ def main():
             obj_Agente.agente()  # Ativa o agente
             jogada = obj_Agente.get_acao()  # Atua
 
-        if jogada < 1 or jogada > 9:
-            print("Posicao invalida")
 
-        # Verifica a posicao do tabuleiro
+        # Check the position of the board
         if tabuleiro[posicao[jogada][0]][posicao[jogada][1]] != " ":
             print("Posicao ocupada. Tente outra !")
             continue
@@ -211,9 +272,9 @@ def main():
                 jogando = False
                 break
 
-        jogador = "X" if jogador == "O" else "O"  # Alterna jogador
+        jogador = "X" if jogador == "O" else "O"  # Toggles player
 
-        jogadas += 1
+        jogadas += 1 # Increment plays
 
 
 if __name__ == '__main__':
