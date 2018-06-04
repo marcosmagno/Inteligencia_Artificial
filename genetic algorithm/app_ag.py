@@ -14,7 +14,7 @@ class GeneticAlgorithm(object):
         Diagrama do Algoritmo:
             1 - População Inicial - É criada de forma aleatória
             2 - Chama a função Fitnes
-            4 - Seleciona um novo gene
+            4 - Seleciona um novo gene (Mutação)
             5 - Gera uma nova população
             6 - Verifica se chegou no objetivo final
                 Caso sim, finaliza o programa
@@ -44,7 +44,7 @@ class GeneticAlgorithm(object):
         timeDiff = datetime.datetime.now() - self.startTime
         fitness = self.get_fitness(guess)
 
-        print("{0}\t{1}\t{2}".format(guess, fitness, str(timeDiff)))
+        print("{0}\t\t{1}\t\t\t{2}".format(guess,fitness, str(timeDiff)))
 
     def generate_parent(self, length):
         """
@@ -54,6 +54,7 @@ class GeneticAlgorithm(object):
         while len(genes) < length:
             sampleSize = min(length - len(genes), len(self.geneSet))
             genes.extend(random.sample(self.geneSet, sampleSize))
+
         return ''.join(genes)
 
     def mutate(self, parent):
@@ -67,8 +68,8 @@ class GeneticAlgorithm(object):
             if newGene == childGenes[index] \
             else newGene
 
-        #print "Mutacao:", ''.join(childGenes)
-        #time.sleep(0.2)
+        print "Mutacao:", ''.join(childGenes)
+        time.sleep(0.1)
 
         return ''.join(childGenes)
 
@@ -87,6 +88,7 @@ def main():
 
     bestParent = geneticAlgorithm.generate_parent(len(target))
     bestFitness = geneticAlgorithm.get_fitness(bestParent)
+    print("Mutação    valor de adequação         Tempo")
     geneticAlgorithm.display(bestParent)
 
     while True:
