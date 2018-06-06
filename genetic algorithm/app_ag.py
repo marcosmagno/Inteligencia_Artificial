@@ -34,6 +34,8 @@ class GeneticAlgorithm(object):
             Esté metodo é responsável por implementar o FITNESS
                 Soma 1 caso a palavra esperada seja igual a atual.
         """
+        print("Função Fitnes : Cálculo de aptidão")
+        time.sleep(3)
         return sum(1 for expected, actual in zip(self.target, guess)
                    if expected == actual)
 
@@ -61,15 +63,19 @@ class GeneticAlgorithm(object):
         """
             Mutação
         """
+
         index = random.randrange(0, len(parent))
         childGenes = list(parent)
         newGene, alternate = random.sample(self.geneSet, 2)
+
         childGenes[index] = alternate \
             if newGene == childGenes[index] \
             else newGene
 
-        print "Mutacao:", ''.join(childGenes)
-        time.sleep(0.1)
+        #print "Mutacao:", ''.join(childGenes)
+        print(str("Mutação:     ") + str(''.join(childGenes)))
+        time.sleep(3)
+        time.sleep(0.5)
 
         return ''.join(childGenes)
 
@@ -85,10 +91,12 @@ def main():
     random.seed()
 
     target = parser.parse_args().texto
-
+    print("Gerando Gene Paterno : Popução Inicial")
     bestParent = geneticAlgorithm.generate_parent(len(target))
-    bestFitness = geneticAlgorithm.get_fitness(bestParent)
-    print("Mutação    valor de adequação         Tempo")
+    time.sleep(3)
+    print(bestParent)
+    bestFitness = geneticAlgorithm.get_fitness(bestParent)    
+    print("\n\nMutação    valor de adequação         Tempo")
     geneticAlgorithm.display(bestParent)
 
     while True:
