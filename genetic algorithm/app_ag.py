@@ -35,7 +35,7 @@ class GeneticAlgorithm(object):
                 Soma 1 caso a palavra esperada seja igual a atual.
         """
         print("Função Fitnes : Cálculo de aptidão")
-        time.sleep(3)
+        #time.sleep(1)
         return sum(1 for expected, actual in zip(self.target, guess)
                    if expected == actual)
 
@@ -74,8 +74,8 @@ class GeneticAlgorithm(object):
 
         #print "Mutacao:", ''.join(childGenes)
         print(str("Mutação:     ") + str(''.join(childGenes)))
-        time.sleep(3)
-        time.sleep(0.5)
+        #time.sleep(3)
+        time.sleep(0.1)
 
         return ''.join(childGenes)
 
@@ -93,7 +93,7 @@ def main():
     target = parser.parse_args().texto
     print("Gerando Gene Paterno : Popução Inicial")
     bestParent = geneticAlgorithm.generate_parent(len(target))
-    time.sleep(3)
+    
     print(bestParent)
     bestFitness = geneticAlgorithm.get_fitness(bestParent)    
     print("\n\nMutação    valor de adequação         Tempo")
