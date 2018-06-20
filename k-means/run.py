@@ -1,12 +1,11 @@
- # clustering dataset
+# clustering dataset
 from sklearn.cluster import KMeans
 from sklearn import metrics
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.cluster import KMeans
-
-
+import collections
 
 """
 
@@ -40,17 +39,22 @@ iris = pd.read_csv("GP_idade.dat")
 X = iris.iloc[:, 0:1].values
 
 
-
-kmeans = KMeans(n_clusters=7, init = 'random')
+kmeans = KMeans(n_clusters=7, init='random')
 kmeans.fit(X)
-#print(kmeans.cluster_centers_[:, 0])
+#print(collections.Counter(kmeans.labels_))
+
+#print(kmeans.labels_)
 
 
-plt.scatter(X[:, 0], X[:,0], s = 100, c = kmeans.labels_)
-plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 0], s = 300, c = 'red',label = 'Centroids')
-plt.title('Grupo de Pessoas')
-plt.xlabel('Total de Pessoas')
-plt.ylabel('Idade')
-plt.legend()
 
-plt.show()
+#for i in kmeans.labels_:
+#    print(kmeans.labels_.count(1))
+
+#plt.scatter(X[:, 0], X[:, 0], c=kmeans.labels_)
+#plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 0], s = 300, c = 'red',label = 'Centroids')
+#plt.title('Grupo de Pessoas')
+#plt.xlabel('Total de Pessoas')
+#plt.ylabel('Idade')
+#plt.legend()
+
+#plt.show()
