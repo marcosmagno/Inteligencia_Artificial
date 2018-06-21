@@ -34,27 +34,25 @@ with open("GP_idade.dat", "w") as gp_file:
 """
 
 iris = pd.read_csv("GP_idade.dat")
-#print(iris.head())
-
 X = iris.iloc[:, 0:1].values
-
-
 kmeans = KMeans(n_clusters=7, init='random')
 kmeans.fit(X)
-#print(collections.Counter(kmeans.labels_))
+dict_result = {}
 
-#print(kmeans.labels_)
+dict_result = {i: X[np.where(kmeans.labels_ == i)] for i in range(kmeans.n_clusters)}
 
+for key, value in dict_result.items():
+	print(key,value)
+	
 
+print(kmeans.cluster_centers_)
 
-#for i in kmeans.labels_:
-#    print(kmeans.labels_.count(1))
+plt.scatter(X[:, 0], X[:, 0], c=kmeans.labels_)
+plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[
+            :, 0], s=300, c='red', label='Centroids')
+plt.title('Grupo de Pessoas')
+plt.xlabel('Total de Pessoas')
+plt.ylabel('Idade')
+plt.legend()
 
-#plt.scatter(X[:, 0], X[:, 0], c=kmeans.labels_)
-#plt.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 0], s = 300, c = 'red',label = 'Centroids')
-#plt.title('Grupo de Pessoas')
-#plt.xlabel('Total de Pessoas')
-#plt.ylabel('Idade')
-#plt.legend()
-
-#plt.show()
+plt.show()
