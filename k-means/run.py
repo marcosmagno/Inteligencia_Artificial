@@ -15,35 +15,40 @@ with open('Grupo de Pessoas.dat') as file:
 
 
 for i in read_data:
-    GP_idade.write(str(i).split("::")[0] + "," + str(i).split("::")[2] + "\n")
+	GP_idade.write(str(i).split("::")[0] + "," + str(i).split("::")[1] + "," + str(i).split("::")[2] + "," + str(i).split("::")[3] + "," + str(i).split("::")[4] + "\n")
+	#GP_idade.write(str(i).split("::")[0] + "," + str(i).split("::")[2] + "\n")
 
 GP_idade.close()
 
 
 try:
-    iris = pd.read_csv("GP_idade.csv", low_memory=False, quoting=csv.QUOTE_NONE,
-                       nrows=6040, error_bad_lines=False, sep=',', header=None,)
-    print(len(iris))
+	iris = pd.read_csv("GP_idade.csv", low_memory=False, quoting=csv.QUOTE_NONE,
+	                   nrows=6040, error_bad_lines=False, sep=',', header=None,)
+	print(len(iris))
 
 except:
-    raise
+	raise
+
 
 
 kmeans = KMeans(n_clusters=7, init='k-means++')
-kmeans.fit(iris.iloc[:, 1:2].values, iris.iloc[:, 0:1].values)
+kmeans.fit(iris.iloc[:, 2:3].values, iris.iloc[:, 0:1].values)
+
 
 
 dict_result = {}
-dict_result = {i: iris.iloc[:, 0:2].values[np.where(kmeans.labels_ == i)]
+dict_result = {i: iris.iloc[:, 0:8].values[np.where(kmeans.labels_ == i)]
                for i in range(kmeans.n_clusters)}
 
 print(dict_result)
-# print(kmeans.cluster_centers_)
+#print(kmeans.cluster_centers_)
 
 for key, value in dict_result.items():
 
-    result_file = open(str(key) + "_" + str(len(value)) + "_" + str(key), "w")
-    result_file.write(str(value))
+	result_file = open(str(key) + "_" + str(len(value)) + "_" + str(key), "w")
+	result_file.write(str(value))
+	
+
 
 
 """
