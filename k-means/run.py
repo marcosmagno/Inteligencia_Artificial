@@ -8,21 +8,21 @@ from sklearn.cluster import KMeans
 import collections
 import csv
 
-
-GP_idade = open("GP_idade.csv", "w")
+# Set option to print all the values in list
+np.set_printoptions(threshold=50000)
 
 # Read file
 with open('Grupo de Pessoas.dat') as file:
     read_data = file.readlines()
 
-
-for i in read_data:
-    GP_idade.write(str(i).split("::")[0] + "," + str(i).split("::")[1] + "," + str(
-        i).split("::")[2] + "," + str(i).split("::")[3] + "," + str(i).split("::")[4] + "\n")
-    
-
-GP_idade.close()
-
+# Write values in file - I use this option to read with read_csv panda
+with open("GP_idade.csv", "w") as GP_idade:
+    for i in read_data:
+        try:
+            GP_idade.write(str(i).split("::")[0] + "," + str(i).split("::")[1] + "," + str(
+                i).split("::")[2] + "," + str(i).split("::")[3] + "," + str(i).split("::")[4] + "\n")
+        except IOError:
+        	raise
 
 try:
     iris = pd.read_csv("GP_idade.csv", low_memory=False, quoting=csv.QUOTE_NONE,
@@ -41,8 +41,8 @@ dict_result = {}
 dict_result = {i: iris.iloc[:, 0:8].values[np.where(kmeans.labels_ == i)]
                for i in range(kmeans.n_clusters)}
 
-#print(dict_result)
-
+print(dict_result)
+print(len(dict_result))
 
 for key, value in dict_result.items():
     result_file = open(str(key) + "_" + str(len(value)) + "_" + str(key), "w")
