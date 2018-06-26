@@ -27,7 +27,7 @@ with open("GP_idade.csv", "w") as GP_idade:
 try:
     iris = pd.read_csv("GP_idade.csv", low_memory=False, quoting=csv.QUOTE_NONE,
                        nrows=6040, error_bad_lines=False, sep=',', header=None,)
-    print(len(iris))
+    #print(len(iris))
 
 except:
     raise
@@ -41,8 +41,6 @@ dict_result = {}
 dict_result = {i: iris.iloc[:, 0:8].values[np.where(kmeans.labels_ == i)]
                for i in range(kmeans.n_clusters)}
 
-print(dict_result)
-print(len(dict_result))
 
 for key, value in dict_result.items():
     result_file = open(str(key) + "_" + str(len(value)) + "_" + str(key), "w")
