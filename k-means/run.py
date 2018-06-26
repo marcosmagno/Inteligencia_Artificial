@@ -7,7 +7,8 @@ import pandas as pd
 from sklearn.cluster import KMeans
 import collections
 import csv
-
+__author__ = "Marcos Magno de Carvalho"
+__group__ = "Jonas Oliveira da Silva Filho, José Mateus de Lima Xisto, Mateus Ruas Duarte, Marcos Vinicius Gonçalves, Mateus Ruas Duarte"
 # Set option to print all the values in list
 np.set_printoptions(threshold=50000)
 
