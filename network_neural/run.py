@@ -6,11 +6,12 @@
 import random
 import copy
 import pandas as pd
-
+import csv
+import itertools
 
 class Perceptron:
 
-    def __init__(self, amostras, saidas, taxa_aprendizado=0.1, epocas=1000, limiar=-1):
+    def __init__(self, amostras, saidas, taxa_aprendizado=0.1, epocas=1000, limiar=1):
 
         self.amostras = list(amostras)  # todas as amostras
 
@@ -29,7 +30,7 @@ class Perceptron:
 
         # adiciona -1 para cada uma das amostras
         for amostra in self.amostras:
-            amostra.insert(0, -1)
+            amostra.insert(0, 1)
 
         # inicia o vetor de pesos com valores aleatórios
         for i in range(self.num_amostra):
@@ -85,11 +86,12 @@ class Perceptron:
     # função utilizada para testar a rede
     # recebe uma amostra a ser classificada e os nomes das classes
     # utiliza a função sinal, se é -1 então é classe1, senão é classe2
-    def testar(self, amostra, classe1, classe2):
+    def testar(self, amostra, classe1, classe2, data):
 
         # insere o -1
-        amostra.insert(0, -1)
-        f = open("result.csv", "a")
+        amostra.insert(0, 1)
+
+        result = {}
         # utiliza o vetor de pesos que foi ajustado na fase de treinamento
         u = 0
         for i in range(self.num_amostra + 1):
@@ -98,29 +100,31 @@ class Perceptron:
         # calcula a saída da rede
         y = self.sinal(u)
 
-        # verifica a qual classe pertence
-        if y == -1:
-            print("Aprovado")
 
-
-        else:
-            print("Reprovado")
-
+        a_exist = ["Aprovado" if y == 1 else "Reprovado" ]
+        f = open("result_networkd.csv", "a")
+        for i in a_exist:
+            print(i)
+            f.write(str(i) + "\n")
+        f.close()
+        #print(a_exist)
 
     # função de ativação: degrau bipolar (sinal)
     def sinal(self, u):
         return 1 if u >= 0 else -1
 
-
-print('\n0 ou 1?\n')
-
 # amostras: um total de 4 amostras
 saidas = []
 iris = pd.read_csv("AnaliseEstudo.csv", low_memory=False,
-                   nrows=650, error_bad_lines=False, sep=';', header=None,)
+                   nrows=650, error_bad_lines=False, sep=';', header=None, skiprows=[0])
+
+
 result = []
 amostras = []
 soma_notas = iris.iloc[1:, 3:7].sum(axis=1)
+notas_provas = iris.iloc[1:, 3:7].values
+
+alldata = iris.iloc[1:, 0:7].values.tolist()
 
 # 1 aprovado
 # 0 reprovado
@@ -132,16 +136,16 @@ for i in soma_notas:
 
 amostras = iris.iloc[:, 0:3].values.tolist()
 
+
 # conjunto de amostras de testes
 testes = copy.deepcopy(amostras)
 
 # cria uma rede Perceptron
 rede = Perceptron(amostras=amostras, saidas=saidas,
                   taxa_aprendizado=0.1, epocas=1000)
-print(saidas)
 # treina a rede
 rede.treinar()
 
 # testando a rede
 for teste in testes:
-    rede.testar(teste, '0', '1')
+    rede.testar(teste, '0', '1', alldata)
